@@ -33,7 +33,10 @@ regexes = [
 ]
 
 [allowlist]
-description = "Quarantined training fixtures used by the pipeline's detection drill"
+description = "Quarantined training fixtures used by the pipeline's detection drill + ephemeral test key"
 paths = [
   '''^demo/violations/.*$''',
+]
+regexes = [
+  '''poka-yoke-ephemeral-0123456789-abcdefghijklmnopqrstuvwxyz''',
 ]
