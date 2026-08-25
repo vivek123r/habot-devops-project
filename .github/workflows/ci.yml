@@ -168,26 +168,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install pinned Trivy
-        run: |
-          set -e
-          # install.sh hits GitHub API (rate-limited on anonymous runners) — use direct release download instead
-          TRIVY_TGZ="trivy_${TRIVY_VERSION#v}_Linux-64bit.tar.gz"
-          for i in 1 2 3; do
-            echo "Attempt $i: installing Trivy v${TRIVY_VERSION} via direct download..."
-            if curl -sSfL "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/${TRIVY_TGZ}" -o /tmp/trivy.tgz \
-              && tar -xzf /tmp/trivy.tgz -C /tmp trivy \
-              && sudo mv /tmp/trivy /usr/local/bin/trivy \
-              && chmod +x /usr/local/bin/trivy; then
-              break
-            fi
-            echo "Direct download failed, retrying in 10s..."
-            sleep 10
-            if [ "$i" -eq 3 ]; then
-              echo "Trivy install failed after 3 attempts"
-              exit 1
-            fi
-          done
-          trivy --version
+        uses: aquasecurity/setup-trivy@v0.2.3
+        with:
+          cache: false
+          version: v${{ env.TRIVY_VERSION }}
 
       - name: Scan filesystem for vulnerabilities, misconfigurations, and secrets
         run: |
