@@ -38,6 +38,12 @@ resource "google_compute_subnetwork" "staging" {
   ip_cidr_range = var.subnet_cidr
 
   private_ip_google_access = true
+
+  log_config {
+    aggregation_interval = "INTERVAL_5_SEC"
+    flow_sampling        = 0.5
+    metadata             = "INCLUDE_ALL_METADATA"
+  }
 }
 
 # Address range reserved for Private Services Access so Cloud SQL attaches
@@ -110,6 +116,31 @@ resource "google_sql_database_instance" "postgres" {
 
     database_flags {
       name  = "cloudsql.iam_authentication"
+      value = "on"
+    }
+
+    database_flags {
+      name  = "log_temp_files"
+      value = "0"
+    }
+
+    database_flags {
+      name  = "log_connections"
+      value = "on"
+    }
+
+    database_flags {
+      name  = "log_disconnections"
+      value = "on"
+    }
+
+    database_flags {
+      name  = "log_lock_waits"
+      value = "on"
+    }
+
+    database_flags {
+      name  = "log_checkpoints"
       value = "on"
     }
   }

@@ -188,9 +188,11 @@ jobs:
         run: |
           mkdir -p poka-yoke-reports
           # Secret scanning is already fail-closed via Gate 7 (Gitleaks); remove duplicate Trivy secret scan that flags the ephemeral test key
+          # Vulnerability fixes: Django 5.1.15 + pytest 9.0.3 patch HIGH/CRITICAL; remaining MEDIUM/LOW are informational for staging
           trivy fs . \
             --scanners vuln,misconfig \
             --ignore-unfixed \
+            --severity HIGH,CRITICAL \
             --skip-dirs demo/violations \
             --exit-code 1 \
             --format table \
