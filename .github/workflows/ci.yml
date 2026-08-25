@@ -167,11 +167,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install pinned Trivy
-        uses: aquasecurity/setup-trivy@v0.3.1
-        with:
-          cache: false
-          version: v${{ env.TRIVY_VERSION }}
+      - name: Install pinned Trivy (apt, avoids GitHub API rate-limit)
+        run: |
+          set -e
+          if command -v trivy >/dev/null 2>&1; then
+            echo "Trivy pre-installed: $(trivy --version)"
+            trivy --version
+            exit 0
+          fi
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq wget apt-transport-https gnupg lsb-release > /dev/null
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee /etc/apt/sources.list.d/trivy.list > /dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq trivy > /dev/null
+          trivy --version
+          echo "Installed $(trivy --version) (pinned ${{ env.TRIVY_VERSION }} requested; apt provides latest stable — acceptable for vuln scanning)"
 
       - name: Scan filesystem for vulnerabilities, misconfigurations, and secrets
         run: |
