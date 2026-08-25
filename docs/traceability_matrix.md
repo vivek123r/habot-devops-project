@@ -38,7 +38,7 @@ proves compliance. Assumption-driven items are marked **(A-nn)** and link to
 | --- | --- | --- | --- |
 | S.1 | "Deliver your completed Terraform, YAML, and Python code blocks in a structured folder layout" | Professional tree exactly as section 8 of README | Repository structure |
 | S.2 | "Present the engineering logic behind your automated linter gates and data pipelines" | Architecture rationale + decisions + diagrams | `docs/architecture.md`, `docs/decisions.md`, `docs/data_flow.md` |
-| S.3.a | "architectural overview and logic flow using a Google Slides or PowerPoint presentation (Maximum of 15 slides)" | Twelve-slide deck content ready to paste into Slides/PowerPoint | `presentation/slides.md`, `presentation/speaker_notes.md` |
+| S.3.a | "architectural overview and logic flow using a Google Slides or PowerPoint presentation (Maximum of 15 slides)" | Twelve-slide deck | `Presentation/Vivek_R_HabotConnect_Presentation.pptx` |
 | S.3.b | "Demonstrate how your automated build gate successfully triggers a Fail-Closed status on invalid or insecure commits" | Reproducible three-scenario demo with expected console output and screenshot checklist | `docs/demo_guide.md` |
 | S.3.c | "All spreadsheet worksheets ... must have Wrap Text enabled ... Use Full Forms Only" | Both workbooks generated with wrap-text on every populated cell, asserted post-generation; full-form vocabulary throughout | `data/schema_mapping.xlsx`, `data/dcyn_logic_matrix.xlsx`, verification inside generator |
 | S.3.d | "answer document and code files are clearly labeled with your full name and contact information at the top" | Candidate header block at the top of every code, workflow, policy, workbook script, and documentation file | Any file in repository (first lines) |

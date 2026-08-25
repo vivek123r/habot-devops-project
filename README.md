@@ -91,29 +91,43 @@ the Google Cloud command line interface.
 
 ### 4.1 Python service
 
+**Linux / macOS:**
+
 ```bash
 cd backend
-python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate
 python -m pip install -r requirements.txt
-python manage.py migrate                                # local SQLite store is created automatically
-python manage.py runserver                              # endpoint: http://127.0.0.1:8000/api/v1/onboarding/submissions/
+DJANGO_DEBUG=true python manage.py migrate              # local SQLite store is created automatically
+DJANGO_DEBUG=true python manage.py runserver            # endpoint: http://127.0.0.1:8000/api/v1/onboarding/submissions/ — POST only, GET / is 404 by design (config/urls.py)
 ```
 
-No secret is needed locally: development mode reads no credentials, and the event publisher
-defaults to a null implementation that records locally.
+**Windows PowerShell:**
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+$env:DJANGO_DEBUG="true"; python manage.py migrate      # local SQLite store is created automatically
+$env:DJANGO_DEBUG="true"; python manage.py runserver    # endpoint: http://127.0.0.1:8000/api/v1/onboarding/submissions/ — POST only
+```
+
+> `$env:DJANGO_DEBUG="true"` (PowerShell) / `DJANGO_DEBUG=true` (bash) must be set **before** any `manage.py` command in each new shell — `backend/config/settings.py:44-50` is fail-closed and `DEBUG` defaults to `False`, which requires `DJANGO_SECRET_KEY` and enables `SECURE_SSL_REDIRECT`/`HSTS`. Tests auto-set this via `backend/conftest.py:12` / `backend/config/test_settings.py:21`, `manage.py` does not. The event publisher defaults to `onboarding.publishers.NullPublisher` locally. Use `http://` not `https://`; if the browser forces `https` after a prior `DEBUG=False` run, use an Incognito window or clear HSTS at `chrome://net-internals/#hsts` (delete `127.0.0.1`).
 
 ### 4.2 Terraform staging environment
 
 ```bash
 cd terraform
-terraform init -backend=false       # module and provider resolution; state stays local
-terraform validate
-terraform plan -var project_id=habot-demo-stg-001 -var project_number=123456789012
-terraform apply ...                  # after review; see docs/decisions.md ADR-002 for state bootstrap
+terraform init -backend=false       # must run before validate/plan; state stays local
+terraform fmt -check -recursive
+terraform validate                  # offline; no GCP credentials needed
+# plan/apply require GCP Application Default Credentials — skip locally unless deploying:
+# gcloud auth application-default login && terraform plan -var project_id=habot-demo-stg-001 -var project_number=123456789012
+# terraform apply ...               # after review; see docs/decisions.md ADR-002 for state bootstrap
 ```
 
 (The plan values above are format examples only; substitute the real staging project
-identifier and its twelve-digit number.)
+identifier and its twelve-digit number. `terraform plan` fails with `could not find default credentials` without `gcloud auth` — `terraform/providers.tf:14` — this is expected locally.)
 
 Remote state bootstrap (one-time, organization administrator): create a versioned,
 public-access-prevention bucket named per convention and configure the backend block as
@@ -231,16 +245,15 @@ habot-devops-project/
 │   ├── architecture.md  data_flow.md  decisions.md  assumptions.md
 │   ├── traceability_matrix.md  demo_guide.md  interview_prep.md
 │   └── diagrams/
-└── presentation/
-    ├── slides.md                    ← twelve-slide interview deck content
-    └── speaker_notes.md             ← narration and demonstration flow
+└── Presentation/
+    └── Vivek_R_HabotConnect_Presentation.pptx  ← twelve-slide interview deck
 ```
 
 ## 9. Demonstration Entry Points
 
 - Reproducing the fail-closed build gate (valid commit, malformed commit, leaked secret):
   [`docs/demo_guide.md`](docs/demo_guide.md)
-- Slide-by-slide presentation package: [`presentation/slides.md`](presentation/slides.md)
+- Slide-by-slide presentation package: [`Presentation/Vivek_R_HabotConnect_Presentation.pptx`](Presentation/Vivek_R_HabotConnect_Presentation.pptx)
 - Requirement-to-evidence mapping:
   [`docs/traceability_matrix.md`](docs/traceability_matrix.md)
 
