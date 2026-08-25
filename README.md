@@ -246,14 +246,15 @@ habot-devops-project/
 │   ├── traceability_matrix.md  demo_guide.md  interview_prep.md
 │   └── diagrams/
 └── Presentation/
-    └── Vivek_R_HabotConnect_Presentation.pptx  ← twelve-slide interview deck
+    ├── Vivek_R_HabotConnect_Presentation.pptx  ← twelve-slide interview deck (editable)
+    └── Vivek_R_HabotConnect_Presentation.pdf   ← same deck, PDF export for reviewers
 ```
 
 ## 9. Demonstration Entry Points
 
 - Reproducing the fail-closed build gate (valid commit, malformed commit, leaked secret):
   [`docs/demo_guide.md`](docs/demo_guide.md)
-- Slide-by-slide presentation package: [`Presentation/Vivek_R_HabotConnect_Presentation.pptx`](Presentation/Vivek_R_HabotConnect_Presentation.pptx)
+- Slide-by-slide presentation package: [`Presentation/Vivek_R_HabotConnect_Presentation.pptx`](Presentation/Vivek_R_HabotConnect_Presentation.pptx) / [`Presentation/Vivek_R_HabotConnect_Presentation.pdf`](Presentation/Vivek_R_HabotConnect_Presentation.pdf)
 - Requirement-to-evidence mapping:
   [`docs/traceability_matrix.md`](docs/traceability_matrix.md)
 
