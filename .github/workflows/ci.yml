@@ -169,7 +169,20 @@ jobs:
 
       - name: Install pinned Trivy
         run: |
-          curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin "v${TRIVY_VERSION}"
+          set -e
+          for i in 1 2 3; do
+            echo "Attempt $i: installing Trivy v${TRIVY_VERSION}..."
+            if curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin "v${TRIVY_VERSION}"; then
+              break
+            fi
+            echo "Install failed, retrying in 10s..."
+            sleep 10
+            if [ "$i" -eq 3 ]; then
+              echo "Trivy install failed after 3 attempts"
+              exit 1
+            fi
+          done
+          trivy --version
 
       - name: Scan filesystem for vulnerabilities, misconfigurations, and secrets
         run: |
