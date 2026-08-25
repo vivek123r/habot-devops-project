@@ -1,0 +1,12 @@
+# Candidate : Vivek R
+# Contact   : vivekravi9496497657@gmail.com | +91 8590609366
+# Project   : HabotConnect Hiring Project 1.0
+#             Junior Cloud & DevOps Engineer (GCP / Django / React)
+#
+# Pinned dependencies: application runtime plus the deterministic test suite.
+# Staging-only additions live in requirements-staging.txt.
+
+Django==5.1.4
+djangorestframework==3.15.2
+pytest==8.3.4
+pytest-django==4.9.0

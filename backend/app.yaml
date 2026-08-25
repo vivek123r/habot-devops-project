@@ -1,0 +1,31 @@
+# Candidate : Vivek R
+# Contact   : vivekravi9496497657@gmail.com | +91 8590609366
+#
+# App Engine standard environment descriptor for the onboarding service.
+# The delivery pipeline composes the final deployment file from this base by
+# appending the vpc_access_connector stanza and the ephemeral signing-key
+# environment variable, both sourced from protected pipeline state - so no
+# project identifier, region token, or secret ever appears in this repository.
+#
+# Deployment (after every Poka-Yoke gate passes):
+#   gcloud app deploy app.yaml --project PROJECT_ID
+
+runtime: python313
+instance_class: F2
+
+entrypoint: gunicorn -b :$PORT -w 2 -k gthread --threads 8 config.wsgi:application
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: "config.settings"
+  DJANGO_DEBUG: "False"
+  ONBOARDING_EVENTS_TOPIC: "student-onboarding-events-staging"
+  ONBOARDING_EVENT_PUBLISHER: "onboarding.publishers.GoogleCloudPubSubPublisher"
+
+inbound_services:
+  - warmup
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 4
+  min_idle_instances: 0
+  max_concurrent_requests: 16

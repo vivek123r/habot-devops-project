@@ -1,0 +1,24 @@
+flowchart LR
+    subgraph Clients
+        P[Parent Browser<br/>React Application]
+    end
+    subgraph GCP["Google Cloud Platform - single region"]
+        AE[App Engine Standard<br/>Django Rest Framework]
+        CS[Cloud SQL PostgreSQL 16<br/>private address only<br/>Identity-based logins]
+        PS[Pub/Sub Topic<br/>student-onboarding-events-staging]
+        DLQ[Dead-Letter Topic<br/>quarantine after five attempts]
+        BQS[BigQuery Subscription<br/>schema-enforced sink]
+        GCS[Cloud Storage D0 Raw Landing<br/>incoming/ writes only,<br/>retention locked, CMEK]
+        BQ[BigQuery D1 Staged Enforced<br/>REQUIRED-mode table,<br/>partitioned and clustered]
+        VIEW[Row-Level Security View<br/>authorized view over base table,<br/>parent email excluded]
+        KMS[Cloud Key Management Service<br/>customer-managed keys per system,<br/>ninety-day rotation]
+    end
+    P -->|HTTPS JSON| AE
+    AE --> CS
+    AE -->|validated events only| PS
+    PS --> BQS --> BQ
+    PS -->|failed deliveries after five attempts| DLQ
+    AE -->|raw payload archive under incoming/| GCS
+    GCS -.->|curated promotion by loader identity| BQ
+    BQ --> VIEW
+    KMS -.encrypts.-> GCS & BQ & PS & CS

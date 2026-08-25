@@ -1,0 +1,17 @@
+{
+  "description": "Undocumented extra key present - envelope strictness rejects silent field additions",
+  "payload": {
+    "parent_full_name": "Ananya Menon",
+    "parent_email": "ananya.menon@example.com",
+    "parent_phone": "+919876543210",
+    "child_full_name": "Arav Menon",
+    "child_date_of_birth": "2019-05-14",
+    "learning_difficulty_category": "Dyslexia",
+    "parental_consent_granted": true,
+    "data_processing_consent_granted": true,
+    "is_priority_case": true
+  },
+  "expected_status": 400,
+  "expected_outcome": "REJECTED",
+  "expected_error_code": "ERR_UNKNOWN_FIELD_NOT_IN_DOCUMENTED_ENVELOPE"
+}

@@ -1,0 +1,39 @@
+# Candidate : Vivek R
+# Contact   : vivekravi9496497657@gmail.com | +91 8590609366
+#
+# Gitleaks configuration - Task 2 Poka-Yoke build gate.
+#
+# Policy:
+#   1. Extend the upstream default ruleset so every vendor-specific detector
+#      Google, Amazon Web Services, Slack, Stripe, private keys, and dozens
+#      more remains active.
+#   2. Add one repository-owned rule catching generic assigned secrets that
+#      default rules miss.
+#   3. Maintain exactly ONE allowlist entry, scoped to the quarantined
+#      training fixtures under demo/violations/. Those files exist solely to
+#      prove the detectors fire; the pipeline's quarantine_drill job re-tests
+#      them outside this allowlist on every run, so the exception can never
+#      become a blind spot. Production source paths are NEVER allowlisted.
+
+title = "HabotConnect Hiring Project - Poka-Yoke Secret Policy"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "habot-generic-assigned-secret"
+description = "Generic assigned credential pattern (variable equals quoted opaque value)"
+regex = '''(?i)(api[_-]?key|secret|password|passwd|token)\s*[=:]\s*["'][A-Za-z0-9+/_\-]{20,}["']'''
+tags = ["secret", "poka-yoke", "habotconnect"]
+
+[rules.allowlist]
+description = "Documentation references that describe the rule without containing credentials"
+regexes = [
+  '''(?i)example of the pattern enforced by rule habot-generic-assigned-secret''',
+]
+
+[allowlist]
+description = "Quarantined training fixtures used by the pipeline's detection drill"
+paths = [
+  '''^demo/violations/.*$''',
+]

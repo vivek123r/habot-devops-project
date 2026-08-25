@@ -1,0 +1,12 @@
+# Candidate : Vivek R
+# Contact   : vivekravi9496497657@gmail.com | +91 8590609366
+# Project   : HabotConnect Hiring Project 1.0
+#             Junior Cloud & DevOps Engineer (GCP / Django / React)
+#
+# Staging runtime dependencies (App Engine + private Cloud SQL + Pub/Sub).
+# Installed only in the delivery environment, never required for local tests.
+
+-r requirements.txt
+gunicorn==23.0.0
+psycopg[binary]==3.2.3
+google-cloud-pubsub==2.26.1

@@ -1,0 +1,26 @@
+flowchart TD
+    PUSH[Push or Pull Request] --> CHK[Checkout - token limited to contents read]
+    CHK --> G3[Gate 3 Python formatting - Black check]
+    CHK --> G4[Gate 4 Python linting - Ruff]
+    CHK --> G5[Gate 5 Terraform canonical formatting check]
+    G5 --> G6[Gate 6 Terraform validate against provider schemas]
+    CHK --> G7[Gate 7 Gitleaks over full Git history - exit 1 on finding]
+    CHK --> G8[Gate 8 Trivy vulnerabilities, misconfigurations, secrets]
+    G3 --> G9[Gate 9 Deterministic validation test suite - eighty-six tests]
+    G4 --> G9
+    G9 --> G9B[Gate 9b Django deployment checks + migration drift check]
+    CHK --> DR[Poka-Yoke drill - planted secret must be detected]
+    G6 --> AT[Gate 10 Deployment readiness attestation]
+    G7 --> AT
+    G8 --> AT
+    G9B --> AT
+    DR --> AT
+    AT --> PROMO[Eligible for staging promotion by delivery job]
+    G3 -. any failure .-> Q[Quarantine - evidence captured, merge blocked, no attestation]
+    G4 -. any failure .-> Q
+    G5 -. any failure .-> Q
+    G6 -. any failure .-> Q
+    G7 -. any failure .-> Q
+    G8 -. any failure .-> Q
+    G9B -. any failure .-> Q
+    DR -. detector silent .-> Q

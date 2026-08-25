@@ -1,0 +1,24 @@
+# Candidate : Vivek R | Contact : vivek987pm@gmail.com | +91 8590609366
+# Local state, credentials, and environment artifacts
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.sqlite3
+
+# Reports and build outputs
+poka-yoke-reports/
+staticfiles/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
